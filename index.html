@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TON Donate Wallet</title>
+
+<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
+
+<style>
+body{
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+font-family:Arial;
+overflow:hidden;
+
+background: radial-gradient(circle at top, #1f2a37, #0b1220);
+color:#fff;
+}
+
+/* TOP BAR */
+.topbar{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:64px;
+
+display:flex;
+align-items:center;
+justify-content:flex-start;
+
+padding:0 18px;
+
+font-size:15px;
+font-weight:600;
+
+background:rgba(20,25,35,0.6);
+backdrop-filter: blur(14px);
+border-bottom:1px solid rgba(255,255,255,0.06);
+}
+
+.brand{
+display:flex;
+align-items:center;
+gap:8px;
+font-weight:600;
+color:#e5e7eb;
+}
+
+.icon svg{
+width:18px;
+height:18px;
+}
+
+/* CARD */
+.app{
+width:380px;
+max-width:92%;
+padding:22px;
+border-radius:20px;
+
+background:rgba(20,25,35,0.75);
+backdrop-filter: blur(18px);
+
+border:1px solid rgba(255,255,255,0.08);
+
+box-shadow:0 20px 60px rgba(0,0,0,0.5);
+
+text-align:center;
+}
+
+.title{
+font-size:18px;
+font-weight:700;
+margin-bottom:6px;
+}
+
+.subtitle{
+font-size:12px;
+opacity:0.7;
+margin-bottom:16px;
+}
+
+/* INPUT */
+.input{
+width:100%;
+padding:14px 16px;
+border-radius:12px;
+
+border:1px solid rgba(255,255,255,0.08);
+
+background:rgba(255,255,255,0.05);
+color:#fff;
+
+outline:none;
+font-size:15px;
+box-sizing:border-box;
+}
+
+.input::placeholder{
+color:rgba(255,255,255,0.4);
+}
+
+/* QUICK BUTTONS */
+.row{
+display:flex;
+gap:8px;
+margin-top:10px;
+}
+
+.quick{
+flex:1;
+padding:10px;
+border-radius:10px;
+
+border:1px solid rgba(255,255,255,0.08);
+
+background:rgba(255,255,255,0.05);
+color:#e5e7eb;
+
+cursor:pointer;
+transition:0.2s;
+}
+
+.quick:hover{
+background:rgba(255,255,255,0.1);
+}
+
+/* PAY BUTTON */
+.pay{
+width:100%;
+margin-top:14px;
+padding:14px;
+border:none;
+border-radius:12px;
+
+font-weight:700;
+color:white;
+
+background:#2AABEE;
+cursor:pointer;
+
+box-shadow:0 8px 20px rgba(42,171,238,0.25);
+
+transition:0.2s;
+}
+
+.pay:hover{
+background:#229ed9;
+transform:translateY(-1px);
+}
+
+/* WALLET */
+#wallet{
+margin-top:14px;
+display:flex;
+justify-content:center;
+}
+</style>
+</head>
+
+<body>
+
+<div class="topbar">
+  <div class="brand">
+    <span>TON Donate Wallet</span>
+
+    <div class="icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40">
+        <path fill="#2AABEE" d="M23.931 4.095a5 5 0 0 1 6.444 3.144l.323.984a5 5 0 0 0 2.622 2.964l.938.442a5 5 0 0 1 2.333 6.78l-.467.924a5 5 0 0 0-.242 3.95l.35.975a5 5 0 0 1-3.143 6.444l-.985.323a5 5 0 0 0-2.964 2.622l-.441.938a5 5 0 0 1-6.78 2.333l-.925-.468a5 5 0 0 0-3.95-.242l-.975.351a5 5 0 0 1-6.444-3.144l-.323-.984a5 5 0 0 0-2.622-2.964l-.937-.441a5 5 0 0 1-2.334-6.78l.468-.925a5 5 0 0 0 .242-3.95l-.351-.975a5 5 0 0 1 3.144-6.444l.985-.323a5 5 0 0 0 2.963-2.622l.442-.938a5 5 0 0 1 6.78-2.333l.924.468a5 5 0 0 0 3.95.242l.975-.351Z"/>
+        <path fill="#ffffff" d="M13.756 22.516a1.698 1.698 0 1 1 2.224-2.568l3.155 2.742 6.357-7.252a1.7 1.7 0 0 1 2.562 2.233l-7.87 9.076a1 1 0 0 1-1.408.101l-5.02-4.332Z"/>
+      </svg>
+    </div>
+
+  </div>
+</div>
+
+<div class="app">
+
+  <div class="title">Send Donation</div>
+  <div class="subtitle">Support creator • send TON tips & donations</div>
+
+  <input id="amount" class="input" placeholder="Enter donation amount (TON)">
+
+  <div class="row">
+    <button class="quick" onclick="setAmount(0.3)">0.3 TON</button>
+    <button class="quick" onclick="setAmount(1)">1 TON</button>
+    <button class="quick" onclick="setAmount(5)">5 TON</button>
+  </div>
+
+  <button class="pay" id="payBtn">Send Donation</button>
+
+  <div id="wallet"></div>
+</div>
+
+<script>
+
+const receiver = "UQDys2byCZacKMxyKKmr4nKiC_Ll_YDX6DIuiOSagP9vcn-m";
+
+const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+    manifestUrl: "https://ton-connect.github.io/demo-dapp-with-react-ui/tonconnect-manifest.json",
+    buttonRootId: "wallet"
+});
+
+function setAmount(v){
+document.getElementById("amount").value = v;
+}
+
+document.getElementById("payBtn").addEventListener("click", async () => {
+
+const amount = document.getElementById("amount").value;
+
+if(!amount || amount < 0.3){
+alert("Minimum donation is 0.3 TON");
+return;
+}
+
+if(!tonConnectUI.wallet){
+alert("Connect wallet first");
+return;
+}
+
+try{
+await tonConnectUI.sendTransaction({
+validUntil: Math.floor(Date.now()/1000)+60,
+messages:[{
+address: receiver,
+amount: (Number(amount)*1e9).toString()
+}]
+});
+
+alert("Donation sent ❤️");
+}catch(e){
+console.log(e);
+alert("Cancelled or error");
+}
+
+});
+
+</script>
+
+</body>
+</html>
