@@ -858,10 +858,36 @@ display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:13px;
   vertical-align:middle;
  margin-left: -0px; /* 👈 приближает к тексту */
 }
+
+.walletRow{
+  width:100%;
+  max-width:1100px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:8px;
+}
+
+.walletConnectBtn{
+  padding:10px 14px;
+  border-radius:14px;
+  border:none;
+  cursor:pointer;
+
+  font-weight:900;
+  color:#fff;
+
+  background: linear-gradient(135deg,#00e5ff,#2979ff,#651fff);
+  box-shadow:0 8px 20px rgba(0,0,0,0.15);
+}
+
+.walletStatus{
+  font-size:12px;
+  font-weight:700;
+  color:#fff;
+  opacity:0.9;
+}
 </style>
-
-<script src="https://unpkg.com/@tonconnect/ui@latest/dist/tonconnect-ui.min.js"></script>
-
 </head>
 
 <body>
@@ -886,6 +912,14 @@ z-index:999999;
 </div>
 
 <div class="top">
+
+<div class="walletRow">
+  <button id="walletBtn" class="walletConnectBtn">
+    Connect Wallet
+  </button>
+
+  <div id="walletStatus" class="walletStatus"></div>
+</div>
 
 <div class="searchWrap">
   
@@ -968,7 +1002,6 @@ fill="url(#starGrad)"/>
 
 <div class="row">
 <button class="langBtn" id="langBtn">
-<button id="tonConnectBtn" class="langBtn">💳</button>
 <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
   <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2.5"/>
   <path d="M3 12H21" stroke="currentColor" stroke-width="2.5"/>
@@ -1697,11 +1730,6 @@ document.addEventListener("click", function(e){
 const DUCK_ANIMATION_URL =
   "https://assets9.lottiefiles.com/packages/lf20_Q4xjvY.json";
 
-const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-  manifestUrl: "https://unknown1577.github.io/TON-Donate-Wallet/tonconnect-manifest.json",
-  buttonRootId: "ton-connect-button"
-});
-
 /* ===== SAFE LOTTIE LOADER ===== */
 function safeLottie(containerId) {
   const el = document.getElementById(containerId);
@@ -1767,17 +1795,42 @@ function renderEmptyState() {
   }, 50);
 }
 
-document.getElementById("tonConnectBtn").onclick = async () => {
-  try {
-    await tonConnectUI.openModal();
-  } catch (e) {
-    console.log("TON connect error:", e);
+const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+  manifestUrl: "https://unknown1577.github.io/TON-Donate-Wallet/tonconnect-manifest.json"
+});
+
+const walletBtn = document.getElementById("walletBtn");
+const walletStatus = document.getElementById("walletStatus");
+
+async function updateWalletUI() {
+  const wallet = tonConnectUI.wallet;
+
+  if (wallet) {
+    walletStatus.innerText = "Connected: " + wallet.account.address.slice(0, 6) + "...";
+    walletBtn.innerText = "Disconnect";
+  } else {
+    walletStatus.innerText = "Not connected";
+    walletBtn.innerText = "Connect Wallet";
   }
-};
+}
+
+walletBtn.addEventListener("click", async () => {
+  const wallet = tonConnectUI.wallet;
+
+  if (wallet) {
+    await tonConnectUI.disconnect();
+  } else {
+    await tonConnectUI.openModal();
+  }
+
+  updateWalletUI();
+});
+
+tonConnectUI.onStatusChange(updateWalletUI);
+
+updateWalletUI();
 
 </script>
-
-<div id="ton-connect-button"></div>
 
 </body>
 </html>
