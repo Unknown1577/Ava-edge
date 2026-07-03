@@ -900,46 +900,6 @@ display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:13px;
   align-items: flex-end;
   gap: 4px;
 }
-
-.bottom-nav{
-  position:fixed;
-  left:8px;
-  right:8px;
-  bottom:8px;
-
-  height:80px;
-
-  display:flex;
-  justify-content:space-around;
-  align-items:center;
-
-  background:rgba(245,245,245,0.92);
-  backdrop-filter:blur(18px);
-
-  border-radius:26px;
-
-  z-index:9999;
-}
-
-.bottom-nav .btn{
-  width:70px;
-  height:70px;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  border-radius:18px;
-  cursor:pointer;
-
-  font-size:22px;
-  transition:0.2s;
-}
-
-.bottom-nav .btn.active{
-  background:#fff;
-  transform:scale(1.05);
-}
 </style>
 </head>
 
@@ -1217,10 +1177,6 @@ return `
 }
 function applyLang(){
 document.getElementById("search").placeholder=t[lang].search;
-
-document.querySelectorAll(".tab")[0].innerText=t[lang].games;
-document.querySelectorAll(".tab")[1].innerText=t[lang].bots;
-document.querySelectorAll(".tab")[2].innerText=t[lang].services;
 
 document.getElementById("ps5Title").innerHTML =
 t[lang].ps5 + `
@@ -1677,34 +1633,19 @@ lang = lang==="ru" ? "en" : "ru";
 applyLang();
 };
 
-document.querySelectorAll(".tab").forEach(tab=>{
-tab.onclick = () => {
-
-  document.querySelectorAll(".tab")
-    .forEach(t => t.classList.remove("active"));
-
-  tab.classList.add("active");
-
-  currentTab = tab.dataset.tab;
-
-  document.getElementById("search").value = "";
-
-  scrollContainer.scrollTop = 0;
-
-  visibleStart = -1;
-  visibleEnd = -1;
-
-  render(); // полный пересчет
-};
-});
-
 function isBlockedDevice() {
+
   const ua = navigator.userAgent;
 
   const isIOS =
-    /iPhone|iPad|iPod/i.test(ua);
+    /iPhone|iPad|iPod/i.test(ua) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
 
-  return isIOS;
+  const isMac = /Macintosh|Mac OS X/i.test(ua);
+
+  const isLargeScreen = window.innerWidth >= 600;
+
+  return isIOS || isMac || isLargeScreen;
 }
 
 function checkBlock() {
@@ -1863,45 +1804,7 @@ tonConnectUI.onStatusChange(updateWalletUI);
 
 updateWalletUI();
 
-function setActiveTab(el){
-
-  document.querySelectorAll(".bottom-nav .btn")
-    .forEach(b => b.classList.remove("active"));
-
-  el.classList.add("active");
-
-  const tab = el.dataset.tab;
-  if(!tab) return;
-
-  currentTab = tab;
-
-  document.getElementById("search").value = "";
-  scrollContainer.scrollTop = 0;
-
-  render();
-}
-
 </script>
-
-<div class="bottom-nav">
-  
-  <div class="btn active" data-tab="games" onclick="setActiveTab(this)">
-    🎮
-  </div>
-
-  <div class="btn" data-tab="bots" onclick="setActiveTab(this)">
-    🤖
-  </div>
-
-  <div class="btn" data-tab="services" onclick="setActiveTab(this)">
-    ⬇
-  </div>
-
-  <div class="btn" onclick="openPS5()">
-    👛
-  </div>
-
-</div>
 
 </body>
 </html>
