@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ф<!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
@@ -93,17 +93,17 @@ background:linear-gradient(#fff,#f1f1f4);font-weight:800;cursor:pointer;
 .storyBtn{position:absolute;left:14px;bottom:14px;background:rgba(0,0,0,.55);color:#fff;padding:10px 14px;border-radius:10px;font-weight:800;}
 
 
-.container{
-  position:fixed;
-  left:0;
-  right:0;
-  top:500px; 
-  bottom:0;
+.cardsContainer{
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 500px; /* 👈 ДВИГАЕШЬ ТУТ */
+  bottom: 0;
 
-  overflow-y:auto;
-  -webkit-overflow-scrolling:touch;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 
-  padding:0 0 84px 0;
+  padding: 0 0 84px 0;
 }
   
 .grid{
@@ -1046,7 +1046,7 @@ fill="url(#starGrad)"/>
 
 </div>
 
-<div class="container" id="scrollContainer">
+<div class="cardsContainer" id="scrollContainer">
   <div class="grid" id="grid"></div>
 </div>
 
