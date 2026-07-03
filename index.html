@@ -900,6 +900,70 @@ display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:13px;
   align-items: flex-end;
   gap: 4px;
 }
+
+.bottom-nav{
+  position:fixed;
+  left:5px;
+  right:5px;
+  bottom:5px;
+
+  height:88px;
+
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+
+  border-radius:28px;
+
+  background: rgba(245,245,245,0.92);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+
+  box-shadow:
+    0 18px 45px rgba(0,0,0,0.45),
+    inset 0 1px 0 rgba(255,255,255,1);
+
+  border: 1px solid rgba(0,0,0,0.08);
+  z-index:9999;
+}
+
+.btn{
+  width:72px;
+  height:72px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border:none;
+  background:transparent;
+
+  border-radius:20px;
+  position:relative;
+  transition:0.2s;
+}
+
+.btn svg{
+  width:34px;
+  height:34px;
+  stroke:#5a5a5a;
+  fill:none;
+  stroke-width:2;
+}
+
+.btn.active svg{
+  stroke:#007aff;
+}
+
+.btn.active::after{
+  content:"";
+  position:absolute;
+  bottom:10px;
+  width:18px;
+  height:3px;
+  border-radius:3px;
+  background:#007aff;
+}
 </style>
 </head>
 
@@ -1051,6 +1115,29 @@ fill="url(#starGrad)"/>
 </div>
 
 <div class="ps5Overlay" id="overlay" onclick="closePS5()"></div>
+
+<div class="bottom-nav">
+
+  <div class="btn active" data-tab="games" onclick="setTab(this)">
+    <svg viewBox="0 0 24 24">
+      <path d="M4 6h16v12H4z" />
+    </svg>
+  </div>
+
+  <div class="btn" data-tab="bots" onclick="setTab(this)">
+    <svg viewBox="0 0 24 24">
+      <path d="M12 2l3 7H9l3-7zM5 9h14l-2 13H7L5 9z"/>
+    </svg>
+  </div>
+
+  <div class="btn" data-tab="services" onclick="setTab(this)">
+    <svg viewBox="0 0 24 24">
+      <path d="M3 12h18" />
+      <path d="M12 3v18" />
+    </svg>
+  </div>
+
+</div>
 
 <div class="ps5Sheet" id="sheet">
 <div class="ps5Header" id="ps5Title"></div>
@@ -1842,6 +1929,21 @@ walletBtn.addEventListener("click", async () => {
 tonConnectUI.onStatusChange(updateWalletUI);
 
 updateWalletUI();
+
+function setTab(el){
+  document.querySelectorAll(".bottom-nav .btn")
+    .forEach(b => b.classList.remove("active"));
+
+  el.classList.add("active");
+
+  currentTab = el.dataset.tab;
+
+  document.getElementById("search").value = "";
+
+  scrollContainer.scrollTop = 0;
+
+  render(); // твоя функция уже есть
+}
 
 </script>
 
