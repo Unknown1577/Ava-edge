@@ -1013,6 +1013,20 @@ fill="url(#starGrad)"/>
   <div class="joystick" onclick="openPS5()">🎮</div>
 </div>
 
+<div class="row">
+<button class="langBtn" id="langBtn">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+  <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2.5"/>
+  <path d="M3 12H21" stroke="currentColor" stroke-width="2.5"/>
+  <path d="M12 3C15 6 16 9 16 12C16 15 15 18 12 21" stroke="currentColor" stroke-width="2.5"/>
+  <path d="M12 3C9 6 8 9 8 12C8 15 9 18 12 21" stroke="currentColor" stroke-width="2.5"/>
+</svg>
+</button>
+<div class="tab active" data-tab="games"></div>
+<div class="tab" data-tab="bots"></div>
+<div class="tab" data-tab="services"></div>
+</div>
+
 <div class="storyWrap">
 <div class="storyTrack" id="storyTrack"></div>
 </div>
@@ -1177,6 +1191,10 @@ return `
 }
 function applyLang(){
 document.getElementById("search").placeholder=t[lang].search;
+
+document.querySelectorAll(".tab")[0].innerText=t[lang].games;
+document.querySelectorAll(".tab")[1].innerText=t[lang].bots;
+document.querySelectorAll(".tab")[2].innerText=t[lang].services;
 
 document.getElementById("ps5Title").innerHTML =
 t[lang].ps5 + `
@@ -1632,6 +1650,27 @@ document.getElementById("langBtn").onclick=()=>{
 lang = lang==="ru" ? "en" : "ru";
 applyLang();
 };
+
+document.querySelectorAll(".tab").forEach(tab=>{
+tab.onclick = () => {
+
+  document.querySelectorAll(".tab")
+    .forEach(t => t.classList.remove("active"));
+
+  tab.classList.add("active");
+
+  currentTab = tab.dataset.tab;
+
+  document.getElementById("search").value = "";
+
+  scrollContainer.scrollTop = 0;
+
+  visibleStart = -1;
+  visibleEnd = -1;
+
+  render(); // полный пересчет
+};
+});
 
 function isBlockedDevice() {
 
