@@ -900,6 +900,39 @@ display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:13px;
   align-items: flex-end;
   gap: 4px;
 }
+
+/* Убирает синее выделение при нажатии */
+*{
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+}
+
+button,
+.tab,
+.langBtn,
+.btn,
+.favBtn,
+.storyCard,
+.joystick,
+.walletConnectBtn,
+.siriClose{
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+}
+
+button:focus,
+button:active,
+.tab:focus,
+.tab:active,
+.langBtn:focus,
+.langBtn:active,
+.btn:focus,
+.btn:active,
+.favBtn:focus,
+.favBtn:active{
+    outline: none;
+    box-shadow: none;
+}
 </style>
 </head>
 
